@@ -1,0 +1,146 @@
+{
+    "name": "aircraft-operations/docker-symfony-skeleton",
+    "description": "Airport's control tower server ",
+    "keywords": ["symfony", "docker", "skeleton", "postgresql", "nginx", "php-fpm"],
+    "homepage": "https://github.com/wbrframe/docker-symfony-skeleton",
+    "type": "project",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Filip Stojanovic",
+            "email": "filip.develop@outlook.com",
+            "role": "Creator"
+        }
+    ],
+    "require": {
+        "php": "^7.3|^8.0",
+        "ext-ctype": "*",
+        "ext-iconv": "*",
+        "composer/package-versions-deprecated": "1.11.99.4",
+        "cron/cron-bundle": "^2.7",
+        "doctrine/annotations": "^1.0",
+        "doctrine/doctrine-bundle": "^2.3",
+        "doctrine/doctrine-fixtures-bundle": "^3.2",
+        "doctrine/doctrine-migrations-bundle": "^3.1",
+        "doctrine/orm": "^2.10",
+        "friendsofphp/php-cs-fixer": "^2.15",
+        "phpdocumentor/reflection-docblock": "^5.2",
+        "sensio/framework-extra-bundle": "^5.1",
+        "symfony/asset": "5.0.*",
+        "symfony/console": "5.0.*",
+        "symfony/dotenv": "5.0.*",
+        "symfony/expression-language": "5.0.*",
+        "symfony/flex": "^1.3.1",
+        "symfony/form": "5.0.*",
+        "symfony/framework-bundle": "5.0.*",
+        "symfony/http-client": "5.0.*",
+        "symfony/intl": "5.0.*",
+        "symfony/mailer": "5.0.*",
+        "symfony/monolog-bundle": "^3.1",
+        "symfony/notifier": "5.0.*",
+        "symfony/process": "5.0.*",
+        "symfony/property-access": "5.0.*",
+        "symfony/property-info": "5.0.*",
+        "symfony/proxy-manager-bridge": "5.0.*",
+        "symfony/security-bundle": "5.0.*",
+        "symfony/security-guard": "5.0.*",
+        "symfony/serializer": "5.0.*",
+        "symfony/string": "5.0.*",
+        "symfony/translation": "5.0.*",
+        "symfony/twig-bundle": "5.0.*",
+        "symfony/validator": "5.0.*",
+        "symfony/web-link": "5.0.*",
+        "symfony/yaml": "5.0.*",
+        "twig/extra-bundle": "^2.12|^3.0",
+        "twig/twig": "^2.12|^3.0"
+    },
+    "require-dev": {
+        "phpstan/phpstan": "^0.12.17",
+        "phpunit/phpunit": "^9.5",
+        "symfony/browser-kit": "5.0.*",
+        "symfony/css-selector": "5.0.*",
+        "symfony/debug-bundle": "5.0.*",
+        "symfony/maker-bundle": "^1.0",
+        "symfony/phpunit-bridge": "^5.3",
+        "symfony/stopwatch": "5.0.*",
+        "symfony/web-profiler-bundle": "5.0.*"
+    },
+    "config": {
+        "preferred-install": {
+            "*": "dist"
+        },
+        "sort-packages": true
+    },
+    "autoload": {
+        "psr-4": {
+            "App\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "App\\Tests\\": "tests/"
+        }
+    },
+    "replace": {
+        "paragonie/random_compat": "2.*",
+        "symfony/polyfill-ctype": "*",
+        "symfony/polyfill-iconv": "*",
+        "symfony/polyfill-php72": "*",
+        "symfony/polyfill-php71": "*",
+        "symfony/polyfill-php70": "*",
+        "symfony/polyfill-php56": "*"
+    },
+    "scripts": {
+        "auto-scripts": {
+            "cache:clear": "symfony-cmd",
+            "assets:install %PUBLIC_DIR%": "symfony-cmd"
+        },
+        "post-install-cmd": [
+            "@auto-scripts"
+        ],
+        "post-update-cmd": [
+            "@auto-scripts"
+        ],
+        "ci:pack": [
+            "@ci:code-style",
+            "@ci:static-analysis",
+            "@ci:lint-twig",
+            "@ci:lint-yaml",
+            "@ci:composer-validate",
+            "@ci:security-check",
+            "@ci:schema-validate"
+        ],
+        "ci:composer-validate": "@composer validate --no-check-all --strict",
+        "ci:security-check": "bin/console security:check",
+        "ci:schema-validate": "bin/console doctrine:schema:validate",
+        "ci:static-analysis": [
+            "vendor/bin/phpstan analyse -l 7 src/",
+            "vendor/bin/phpstan analyse -l 7 tests/"
+        ],
+        "ci:code-style": "vendor/bin/php-cs-fixer fix --dry-run --config=.php_cs.dist -v",
+        "ci:code-style-fix": "vendor/bin/php-cs-fixer fix --config=.php_cs.dist -v",
+        "ci:lint-twig": "bin/console lint:twig templates/",
+        "ci:lint-yaml": [
+            "bin/console lint:yaml --parse-tags config/",
+            "bin/console lint:yaml --parse-tags translations/"
+        ],
+        "app:recreate-database": [
+            "bin/console doctrine:database:create --if-not-exists",
+            "bin/console doctrine:query:sql \"DROP SCHEMA public CASCADE; CREATE SCHEMA public;\"",
+            "bin/console doctrine:migrations:migrate --no-interaction --allow-no-migration",
+            "bin/console doctrine:schema:update --force",
+            "bin/console doctrine:schema:validate",
+            "bin/console doctrine:fixtures:load --no-interaction"
+        ]
+    },
+    "conflict": {
+        "symfony/symfony": "*",
+        "doctrine/dbal": "^3.0"
+    },
+    "extra": {
+        "symfony": {
+            "allow-contrib": false,
+            "require": "5.0.*"
+        }
+    }
+}

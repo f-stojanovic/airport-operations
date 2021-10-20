@@ -1,0 +1,55 @@
+{% extends 'base.html.twig' %}
+{% block body %}
+    <div class="row">
+        <div class="col-md-12">
+            <div id="aircraft" class="box">
+                <div class="box-header">
+                    <h3 class="box-title">{{ contentTitle }}</h3>
+                </div>
+
+                {% for message in app.flashes('success') %}
+                    <div id="flash-msg" class="alert alert-success">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+
+                {% for message in app.flashes('danger') %}
+                    <div id="flash-msg" class="alert alert-danger">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+
+                <div class="register-box-body">
+                    <p class="login-box-msg">Request an action</p>
+                    <div class="text-center">
+
+                        {% if aircraft.position == 'parked' %}
+                            <a type="button" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#takeOffModal">Take Off</a>
+                        {% endif %}
+
+                        {% if aircraft.position == 'airborne' %}
+                            <a type="button" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#landingModal">Request landing</a>
+                        {% endif %}
+
+                        {% if aircraft.position == 'approach' %}
+                            <a type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#cancelLandingModal">Cancel landing</a>
+                        {% endif %}
+
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="text-right">
+                        <a href="{{ path('aircraft') }}" class="btn btn-primary btn-md">Back</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% include 'modal/take-off.html.twig' %}
+    {% include 'modal/landing.html.twig' %}
+    {% include 'modal/cancel-landing.html.twig' %}
+
+{% endblock %}

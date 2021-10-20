@@ -1,0 +1,114 @@
+{% extends 'base.html.twig' %} {% block
+    body %}
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card bg-light mb-3 mt-3">
+                    <div class="card-body">
+                        <div class="row">
+                            <!-- ./col -->
+                            <div class="col-lg-6 col-xs-6">
+                                <!-- small box -->
+                                <div class="small-box bg-green">
+                                    <div class="inner">
+                                        <h3>Parking availability</h3>
+                                        <p>Location: {{ parkingInfo.location }}</p>
+                                        <p>Runway: {{ parkingInfo.runway }}</p>
+
+                                        <p>AIRLINER: * available {{ parkingInfo.airliner }} *</p>
+                                        <p>{ parked: } {% for item in parkingInfo.parkedAirliner %} {{item.callSign }}, {% endfor %}</p>
+                                        <p>PRIVATE: * available {{ parkingInfo.private }} *</p>
+                                        <p>{ parked: } {% for item in parkingInfo.parkedPrivate %} {{item.callSign }}, {% endfor %}</p>
+                                    </div>
+                                    <div class="icon">
+                                        <i class="ion ion-plane"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- ./col -->
+                            <!-- ./col -->
+                            <div class="col-lg-6 col-xs-6">
+                                <!-- small box -->
+                                <div class="small-box bg-red">
+                                    <div class="inner">
+                                        <h3>Weather</h3>
+                                        <br>
+
+                                        {% if weatherInfo is null %}
+
+                                            <br>
+                                            <br>
+                                            <br>
+                                            <p>Weather info will be generated after aircraft </p>
+                                            <p>makes a request or when running cron task!</p>
+                                            <br>
+                                            <br>
+                                            <br>
+
+                                        {% else %}
+                                            <p>Description: {{ weatherInfo.description }}</p>
+                                            <p>Temperature: {{ weatherInfo.temperature }}</p>
+                                            <p>Visibility: {{ weatherInfo.visibility }}</p>
+                                            <p>Wind speed: {{ weatherInfo.windSpeed }}</p>
+                                            <p>Wind deg: {{ weatherInfo.windDag }}</p>
+                                            <p>Last Update: {{ weatherInfo.lastUpdate|date('Y-m-d H:i:s') }}</p>
+                                        {% endif %}
+                                    </div>
+                                    <div class="icon">
+                                        <i class="ion ion-cloud"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- ./col -->
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div id="aircraft" class="box">
+                                    <div class="box-header">
+                                        <h3 class="box-title">Last 10 Logs</h3>
+                                    </div>
+                                    <!-- /.box-header -->
+                                    <div class="box-body table-responsive no-padding">
+                                        <table id="logs-table" class="table table-condensed">
+                                            <tbody>
+                                            <tr class="text-centar">
+                                                <th class="text-center">#</th>
+                                                <th class="text-center">Name</th>
+                                                <th class="text-center">Aircraft</th>
+                                                <th class="text-center">Ground Crew</th>
+                                                <th class="text-center">Position</th>
+                                                <th class="text-center">Time Of Change</th>
+                                                <th class="text-center">State</th>
+                                            </tr>
+                                            {% for log in logs %}
+                                                <tr>
+                                                    {% if log.state == 'accepted' %}
+                                                        {% set marker = 'success' %}
+                                                    {% else %}
+                                                        {% set marker = 'danger' %}
+                                                    {% endif %}
+
+                                                    <td class="text-center"> {{ log.id }}</td>
+                                                    <td class="text-center"> {{ log.name }} </td>
+                                                    <td class="text-center"> {{ log.aircraft.callSign }} </td>
+                                                    <td class="text-center"> {{ log.groundCrew.name }} </td>
+                                                    <td class="text-center"> {{ log.position }} </td>
+                                                    <td class="text-center"> {{ log.timeOfChange|date('Y-m-d H:i:s') }} </td>
+                                                    <td class="text-center"><span class="label label-{{ marker }}"> {{ log.state|upper }}</span></td>
+                                                </tr>
+                                            {% endfor %}
+                                            </tbody>
+                                        </table>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

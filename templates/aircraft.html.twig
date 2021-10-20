@@ -1,0 +1,77 @@
+{% extends 'base.html.twig' %}
+{% block body %}
+    <div class="row">
+        <div class="col-md-12">
+            <div id="aircraft" class="box">
+                <div class="box-header">
+                    <h3 class="box-title">{{ contentTitle }}<br>Total items: [{{ totalItems }}]</h3>
+                </div>
+                <!-- /.box-header -->
+                <div class="box-body table-responsive no-padding">
+                    <table class="table table-condensed">
+                        <tbody>
+                        <tr class="text-centar">
+                            <th class="text-center">#</th>
+                            <th class="text-center">Name</th>
+                            <th class="text-center">Type</th>
+                            <th class="text-center">Position</th>
+                            <th class="text-center">Call Sign</th>
+                            <th class="text-center">Latitude</th>
+                            <th class="text-center">Longitude</th>
+                            <th class="text-center">Altitude</th>
+                            <th class="text-center">Heading</th>
+                            <th class="text-center">Commands</th>
+                        </tr>
+                        {% for aircraft in aircraftList %}
+                            <tr>
+                                {% if aircraft.position == 'airborne' %}
+                                    {% set marker = 'danger' %}
+                                {% elseif (aircraft.position == 'take_off') or (aircraft.position == 'landed') %}
+                                    {% set marker = 'warning' %}
+                                {% elseif aircraft.position == 'parked' %}
+                                    {% set marker = 'success' %}
+                                {% elseif aircraft.position == 'approach' %}
+                                    {% set marker = 'info' %}
+                                {% else %}
+                                    {% set marker = 'primary' %}
+                                {% endif %}
+                                <td class="text-center"> {{ aircraft.id }} </td>
+                                <td class="text-center"> {{ aircraft.name }} </td>
+                                <td class="text-center"> {{ aircraft.type }} </td>
+                                <td class="text-center"> <span class="label label-{{ marker }}"> {{ aircraft.position }}</span></td>
+                                <td class="text-center"> {{ aircraft.callSign }} </td>
+                                <td class="text-center"> {{ aircraft.latitude }} </td>
+                                <td class="text-center"> {{ aircraft.longitude }} </td>
+                                <td class="text-center"> {{ aircraft.altitude }} </td>
+                                <td class="text-center"> {{ aircraft.heading }} </td>
+                                <td class="text-center">
+                                    <a type="button" href="{{ path('aircraft_communication', {'id':aircraft.id}) }}" class="btn btn-primary btn-sm">Communicate</a>
+                                    <a type="button" href="{{ path('aircraft_location', {'callSign':aircraft.callSign}) }}" class="btn btn-primary btn-sm">Transmit Position</a>
+                                    <a type="button" href="{{ path('weather', {'callSign':aircraft.callSign}) }}" class="btn btn-primary btn-sm">Weather</a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                    <div class="box-footer clearfix">
+                        <ul class="pagination pagination-sm no-margin pull-right">
+                            <li><a href="{{ app.request.pathinfo }}?page={{ currentPage - 1 }}">«</a></li>
+                            {% for i in 1..totalPages %}
+                                <li><a href="{{ app.request.pathinfo }}?page={{ i }}" {% if i == currentPage %} style="font-weight: bold" {% endif %}>{{ i }}</a></li>
+                            {% endfor %}
+                            <li><a href="{{ app.request.pathinfo }}?page={{ currentPage + 1 }}">»</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="text-right">
+                        <a href="{{ path('dashboard') }}" class="btn btn-primary btn-md">Back</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
